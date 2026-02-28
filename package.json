@@ -1,5 +1,5 @@
 {
-  "name": "devlens",
+  "name": "@dwntgrnd/devlens",
   "version": "0.1.0",
   "description": "Live design token editor and element inspector for Next.js + Tailwind CSS projects",
   "main": "dist/index.js",
@@ -45,7 +45,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/dwntgrnd/devlens.git"
   },
   "keywords": [
     "design-tokens",

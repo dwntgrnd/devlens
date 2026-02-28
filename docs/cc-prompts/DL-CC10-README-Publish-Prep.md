@@ -1,3 +1,22 @@
+# DL-CC10 — README & Publish Prep
+
+**Context:** DevLens is a standalone NPM package extracted from AK12-MVP-v2. All source code is complete (CC01–CC09 executed). This prompt creates the README, LICENSE, and finalizes package metadata for publish readiness.
+
+**Codebase:** `/Users/dorenberge/WorkInProgress/VIBE/Dev_Lens/`
+
+---
+
+## Task 1: Create LICENSE file
+
+Create `LICENSE` at the project root with the MIT license. Copyright holder: `Doren Berge`. Year: `2026`.
+
+---
+
+## Task 2: Replace README.md
+
+Replace the current placeholder `README.md` at the project root with the full content below. Preserve the content exactly — do not rephrase, reorganize, or add sections.
+
+````markdown
 # DevLens
 
 **Live design token editor and element inspector for Next.js + Tailwind CSS projects.**
@@ -39,7 +58,7 @@ If your project already runs with `npm run dev`, you're ready.
 ### Install the package
 
 ```bash
-npm install @dwntgrnd/devlens
+npm install devlens
 ```
 
 DevLens expects these packages in your project. If you're using Next.js with Tailwind, you almost certainly have them already:
@@ -57,32 +76,18 @@ npm install lucide-react
 
 ### Add DevLens to your layout
 
-DevLens is a client component that needs a small wrapper to work with Next.js App Router layouts. Create a providers file and update your layout to use it:
-
-```tsx
-// app/providers.tsx
-'use client';
-import { DevLens } from '@dwntgrnd/devlens';
-
-export function Providers({ children }: { children: React.ReactNode }) {
-  return (
-    <>
-      {children}
-      {process.env.NODE_ENV === 'development' && <DevLens />}
-    </>
-  );
-}
-```
+Open your root layout file (typically `app/layout.tsx`) and add the DevLens component inside `<body>`, after your page content:
 
 ```tsx
 // app/layout.tsx
-import { Providers } from './providers';
+import { DevLens } from 'devlens';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <body>
-        <Providers>{children}</Providers>
+        {children}
+        {process.env.NODE_ENV === 'development' && <DevLens />}
       </body>
     </html>
   );
@@ -127,7 +132,7 @@ If you want human-readable names for your tokens or want to organize them into c
 
 ```tsx
 // devlens.config.ts
-import type { DevLensConfig } from '@dwntgrnd/devlens';
+import type { DevLensConfig } from 'devlens';
 
 export const devlensConfig: DevLensConfig = {
   tokenOverrides: {
@@ -152,17 +157,18 @@ export const devlensConfig: DevLensConfig = {
 Then pass the config to DevLens in your layout:
 
 ```tsx
-// app/providers.tsx
-'use client';
-import { DevLens } from '@dwntgrnd/devlens';
+// app/layout.tsx
+import { DevLens } from 'devlens';
 import { devlensConfig } from '../devlens.config';
 
-export function Providers({ children }: { children: React.ReactNode }) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <>
-      {children}
-      {process.env.NODE_ENV === 'development' && <DevLens {...devlensConfig} />}
-    </>
+    <html lang="en">
+      <body>
+        {children}
+        {process.env.NODE_ENV === 'development' && <DevLens {...devlensConfig} />}
+      </body>
+    </html>
   );
 }
 ```
@@ -279,7 +285,7 @@ To enable this, add a page route for the detached window:
 
 ```tsx
 // app/dev/devlens-detached/page.tsx
-import { DevLens } from '@dwntgrnd/devlens';
+import { DevLens } from 'devlens';
 import { devlensConfig } from '../../../devlens.config';
 
 export default function DevLensDetachedPage() {
@@ -329,3 +335,65 @@ Open [http://localhost:3000](http://localhost:3000). The example demonstrates ze
 ## License
 
 MIT — see [LICENSE](./LICENSE) for details.
+````
+
+---
+
+## Task 3: Verify package.json
+
+Confirm the following fields in `package.json` are set correctly. Only modify fields that are missing or incorrect — do not rewrite the entire file.
+
+- `"name"` — `"devlens"`
+- `"version"` — `"0.1.0"`
+- `"license"` — `"MIT"`
+- `"description"` — `"Live design token editor and element inspector for Next.js + Tailwind CSS projects"`
+- `"author"` — `"Doren Berge"`
+- `"repository.url"` — leave empty string (populated when repo is created)
+- `"keywords"` — ensure these are present: `design-tokens`, `tailwind`, `css-variables`, `devtools`, `next.js`, `design-system`, `token-editor`
+- `"exports"` — confirm `"."` and `"./styles"` paths are present
+- `"files"` — confirm `["dist", "README.md", "LICENSE"]`
+
+---
+
+## Task 4: Verify example app README
+
+Read `examples/next-app/README.md`. If it exists and is reasonable, leave it. If it's a placeholder or missing, replace with:
+
+```markdown
+# DevLens Example — Next.js
+
+Minimal Next.js + Tailwind CSS app demonstrating DevLens integration.
+
+## Setup
+
+```bash
+npm install
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000). The DevLens panel is accessible via the floating button in the bottom-right corner.
+
+## What's Demonstrated
+
+- Zero-config auto-detection of CSS custom properties
+- Token overrides with custom labels and grouping (`devlens.config.ts`)
+- Migration map with semantic replacement suggestions
+- Detached window route at `/dev/devlens-detached`
+
+See `src/devlens.config.ts` for the configuration.
+```
+
+---
+
+## Verification Checklist
+
+After completing all tasks:
+
+- [ ] `LICENSE` file exists at project root with MIT license, copyright Doren Berge 2026
+- [ ] `README.md` is the full version — check it starts with `# DevLens` and contains "## What You'll See" and "## Full configuration reference"
+- [ ] `package.json` has `"author": "Doren Berge"` and updated keywords
+- [ ] `package.json` exports map includes `"."` and `"./styles"`
+- [ ] `package.json` files array includes `"LICENSE"`
+- [ ] `examples/next-app/README.md` exists and is not a placeholder
+- [ ] `npx tsc --noEmit` still passes clean (no type errors introduced)
+- [ ] No source files in `src/` were modified (this prompt only touches README, LICENSE, package.json, and example README)
