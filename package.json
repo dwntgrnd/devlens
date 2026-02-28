@@ -1,7 +1,7 @@
 {
   "name": "devlens",
   "version": "0.1.0",
-  "description": "Visual design token editor and element inspector for Next.js + Tailwind CSS projects",
+  "description": "Live design token editor and element inspector for Next.js + Tailwind CSS projects",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
@@ -41,6 +41,7 @@
     "tsup": "^8",
     "typescript": "^5"
   },
+  "author": "Doren Berge",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -51,6 +52,8 @@
     "tailwind",
     "css-variables",
     "devtools",
-    "next.js"
+    "next.js",
+    "design-system",
+    "token-editor"
   ]
 }
