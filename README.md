@@ -57,7 +57,11 @@ npm install lucide-react
 
 ### Add DevLens to your layout
 
-DevLens is a client component that needs a small wrapper to work with Next.js App Router layouts. Create a providers file and update your layout to use it:
+This requires two steps: creating a new file, then making a small edit to your existing layout.
+
+**Step 1: Create a new file** at `app/providers.tsx`
+
+This is a new file — create it in your `app/` directory alongside your existing `layout.tsx`. Copy the entire contents below:
 
 ```tsx
 // app/providers.tsx
@@ -74,22 +78,28 @@ export function Providers({ children }: { children: React.ReactNode }) {
 }
 ```
 
-```tsx
-// app/layout.tsx
-import { Providers } from './providers';
+**Step 2: Edit your existing `app/layout.tsx`**
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <html lang="en">
-      <body>
-        <Providers>{children}</Providers>
-      </body>
-    </html>
-  );
-}
+Do **not** replace the file. Make two changes to what's already there:
+
+1. **Add this import** at the top of the file, with your other imports:
+
+```tsx
+import { Providers } from './providers';
 ```
 
-The `process.env.NODE_ENV` check ensures DevLens only renders during development. It will never appear in your production build.
+2. **Wrap `{children}` with `<Providers>`** inside the `<body>` tag. Find the line that says `{children}` and change it:
+
+```diff
+  <body>
+-   {children}
++   <Providers>{children}</Providers>
+  </body>
+```
+
+Leave everything else in `layout.tsx` as-is — your fonts, metadata, className attributes, and other imports all stay.
+
+The `process.env.NODE_ENV` check in `providers.tsx` ensures DevLens only renders during development. It will never appear in your production build.
 
 ### Verify it's working
 

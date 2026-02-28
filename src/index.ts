@@ -1,3 +1,5 @@
+import './styles/devlens.css';
+
 // Public API
 export { DevLens } from './DevLens';
 export { DevLensProvider } from './DevLensProvider';
