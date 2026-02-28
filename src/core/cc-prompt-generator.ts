@@ -104,7 +104,7 @@ export function generateCCPrompt(config: TokenPromptConfig): string {
   lines.push('}');
   lines.push('```');
   lines.push('');
-  lines.push('3. Add to `src/components/dev/token-editor/token-registry.ts` `TOKEN_OVERRIDES`:');
+  lines.push('3. Register in your DevLens config\'s `tokenOverrides`:');
   lines.push('');
   lines.push('```typescript');
   for (const prop of config.properties) {
