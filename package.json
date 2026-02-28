@@ -1,6 +1,6 @@
 {
   "name": "@dwntgrnd/devlens",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Live design token editor and element inspector for Next.js + Tailwind CSS projects",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
