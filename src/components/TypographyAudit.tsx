@@ -1,9 +1,8 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useDevLensConfig } from '../hooks/use-devlens-config';
 import { getExpectedScaleStep, findNearestScaleStep } from '../core/scale-step-lookup';
-// PENDING: This file is refactored in DL-CC04
 import { findFontSizeClasses } from '../core/class-categories';
 import { InspectorSwitch } from './InspectorSwitch';
 import type { TokenCreationContext } from './RawCssInput';
@@ -52,7 +51,11 @@ export function TypographyAudit({
   isBaselineActive,
   onCreateToken,
 }: TypographyAuditProps) {
-  const { scaleBaseline } = useDevLensConfig();
+  const { scaleBaseline, projectTextSizeClasses } = useDevLensConfig();
+  const projectTextSizeSet = useMemo(
+    () => new Set(projectTextSizeClasses),
+    [projectTextSizeClasses],
+  );
   const [showOnScale, setShowOnScale] = useState(false);
   const previewStateRef = useRef<PreviewState | null>(null);
 
@@ -77,7 +80,7 @@ export function TypographyAudit({
   const computedFontSize = parseFloat(computed.fontSize);
   const rawLineHeight = computed.lineHeight;
   const computedLineHeight = rawLineHeight === 'normal' ? 1.5 : parseFloat(rawLineHeight) / computedFontSize;
-  const fontSizeClasses = findFontSizeClasses(currentClasses);
+  const fontSizeClasses = findFontSizeClasses(currentClasses, projectTextSizeSet);
   const viaClass = fontSizeClasses.length > 0 ? fontSizeClasses[0] : null;
 
   const handleTogglePreview = (checked: boolean) => {

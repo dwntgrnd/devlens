@@ -37,6 +37,8 @@ export interface MigrationEntry {
   replacement: string;
   /** Why this migration is recommended */
   reason?: string;
+  /** Confidence level for this suggestion */
+  confidence?: 'high' | 'medium';
 }
 
 export interface DevLensConfig {

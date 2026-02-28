@@ -3,7 +3,6 @@
  * Flags competing Tailwind classes that target the same CSS property.
  */
 
-// PENDING: This file is refactored in DL-CC04
 import { TEXT_SIZE_KEYWORDS } from './class-categories';
 
 export interface ClassConflict {

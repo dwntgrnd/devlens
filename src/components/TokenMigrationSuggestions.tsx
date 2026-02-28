@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-// PENDING: This file is refactored in DL-CC04
+import { useDevLensConfig } from '../hooks/use-devlens-config';
 import { getMigrationSuggestions } from '../core/token-migration-map';
 
 interface TokenMigrationSuggestionsProps {
@@ -13,11 +13,12 @@ export function TokenMigrationSuggestions({
   classes,
   onApply,
 }: TokenMigrationSuggestionsProps) {
+  const { migrationMap } = useDevLensConfig();
   const [dismissed, setDismissed] = useState<Set<string>>(new Set());
 
   const suggestions = useMemo(
-    () => getMigrationSuggestions(classes),
-    [classes]
+    () => getMigrationSuggestions(classes, migrationMap),
+    [classes, migrationMap]
   );
 
   const visible = suggestions.filter((s) => !dismissed.has(s.from));

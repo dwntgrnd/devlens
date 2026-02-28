@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { ElementInspectorReturn } from '../hooks/use-element-inspector';
 import { MousePointer } from 'lucide-react';
-// PENDING: This file is refactored in DL-CC04
+import { useDevLensConfig } from '../hooks/use-devlens-config';
 import { categorizeClasses } from '../core/class-categories';
 import { ClassCategoryGroup } from './ClassCategoryGroup';
 import { ElementSelectorOverlay } from './ElementSelectorOverlay';
@@ -27,6 +27,11 @@ export function ElementInspectorTab({
   isDetached,
   scaleBaseline,
 }: ElementInspectorTabProps) {
+  const { projectTextSizeClasses } = useDevLensConfig();
+  const projectTextSizeSet = useMemo(
+    () => new Set(projectTextSizeClasses),
+    [projectTextSizeClasses],
+  );
   const [addValue, setAddValue] = useState('');
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -64,7 +69,7 @@ export function ElementInspectorTab({
     ? inspector.getElementIdentifier()
     : null;
 
-  const categoryGroups = categorizeClasses(inspector.currentClasses);
+  const categoryGroups = categorizeClasses(inspector.currentClasses, projectTextSizeSet);
 
   const conflicts = useMemo(
     () => detectConflicts(inspector.currentClasses),
