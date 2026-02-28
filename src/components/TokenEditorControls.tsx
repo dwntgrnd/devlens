@@ -5,7 +5,7 @@ import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from '@/components/ui/accordion';
+} from './Accordion';
 import { getTokensByGroup, type TokenDefinition } from '../core/token-registry';
 import { HslColorControl } from './HslColorControl';
 import { LengthControl } from './LengthControl';

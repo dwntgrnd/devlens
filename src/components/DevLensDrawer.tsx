@@ -410,33 +410,37 @@ export function DevLensDrawer() {
 
         /* Accordion overrides */
         .te-accordion {
-          border: none !important;
+          border: none;
         }
 
         .te-accordion-item {
-          border-color: #313244 !important;
+          border-bottom: 1px solid #313244;
+        }
+
+        .te-accordion-item:last-child {
+          border-bottom: none;
         }
 
         .te-accordion-trigger {
-          padding: 8px 4px !important;
-          font-size: 12px !important;
-          font-weight: 600 !important;
-          color: #cdd6f4 !important;
-          text-decoration: none !important;
-          font-family: inherit !important;
+          padding: 8px 4px;
+          font-size: 12px;
+          font-weight: 600;
+          color: #cdd6f4;
+          text-decoration: none;
+          font-family: inherit;
         }
 
         .te-accordion-trigger:hover {
-          text-decoration: none !important;
-          color: #89b4fa !important;
+          text-decoration: none;
+          color: #89b4fa;
         }
 
         .te-accordion-trigger svg {
-          color: #6c7086 !important;
+          color: #6c7086;
         }
 
         .te-accordion-content {
-          font-size: 13px !important;
+          font-size: 13px;
         }
 
         .te-change-badge {
