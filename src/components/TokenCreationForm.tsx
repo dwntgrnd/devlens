@@ -2,8 +2,9 @@
 
 import { useCallback, useMemo, useState } from 'react';
 import { Copy, Check } from 'lucide-react';
-// PENDING: This file is refactored in DL-CC03
-import { TOKEN_OVERRIDES } from '../core/token-registry';
+import { useDevLensConfig } from '../hooks/use-devlens-config';
+import { autoDetectTokens } from '../core/auto-detect';
+import { buildRegistry } from '../core/token-registry';
 import { generateCCPrompt } from '../core/cc-prompt-generator';
 import type { TokenCreationContext } from './RawCssInput';
 
@@ -44,14 +45,20 @@ export function TokenCreationForm({
   const [scaleType, setScaleType] = useState<'independent' | 'derived'>('independent');
   const [copied, setCopied] = useState(false);
 
+  const { tokenOverrides } = useDevLensConfig();
+
+  const registry = useMemo(
+    () => buildRegistry(autoDetectTokens(), tokenOverrides),
+    [tokenOverrides],
+  );
+
   const kebabName = toKebab(tokenName);
 
-  // Check collision against TOKEN_OVERRIDES keys
+  // Check collision against the merged registry
   const collision = useMemo(() => {
     if (!kebabName) return false;
-    const fullKey = `--${kebabName}`;
-    return fullKey in TOKEN_OVERRIDES;
-  }, [kebabName]);
+    return `--${kebabName}` in registry;
+  }, [kebabName, registry]);
 
   // Compute multiplier if derived from --font-base
   const multiplier = useMemo(() => {
@@ -194,7 +201,7 @@ export function TokenCreationForm({
         </div>
         {collision && (
           <div className="te-token-form-error">
-            Token name already exists in TOKEN_OVERRIDES
+            Token name already exists in the registry
           </div>
         )}
       </div>

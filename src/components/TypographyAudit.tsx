@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { useDevLensConfig } from '../hooks/use-devlens-config';
 import { getExpectedScaleStep, findNearestScaleStep } from '../core/scale-step-lookup';
 // PENDING: This file is refactored in DL-CC04
 import { findFontSizeClasses } from '../core/class-categories';
@@ -51,6 +52,7 @@ export function TypographyAudit({
   isBaselineActive,
   onCreateToken,
 }: TypographyAuditProps) {
+  const { scaleBaseline } = useDevLensConfig();
   const [showOnScale, setShowOnScale] = useState(false);
   const previewStateRef = useRef<PreviewState | null>(null);
 
@@ -70,7 +72,7 @@ export function TypographyAudit({
   }, [element]);
 
   const tagName = element.tagName.toLowerCase();
-  const expected = getExpectedScaleStep(tagName);
+  const expected = getExpectedScaleStep(tagName, scaleBaseline);
   const computed = getComputedStyle(element);
   const computedFontSize = parseFloat(computed.fontSize);
   const rawLineHeight = computed.lineHeight;
@@ -132,7 +134,7 @@ export function TypographyAudit({
 
   // === Unmapped element ===
   if (!expected) {
-    const nearest = findNearestScaleStep(computedFontSize);
+    const nearest = findNearestScaleStep(computedFontSize, scaleBaseline);
     return (
       <div className="te-typo-audit">
         <div className="te-typo-audit-header">Typography Audit</div>

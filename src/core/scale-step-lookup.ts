@@ -1,6 +1,10 @@
-// PENDING: This file is refactored in DL-CC03
-import { AK12_SCALE_BASELINE } from './scale-baseline-config';
-import type { ScaleBaselineMapping } from '../config/types';
+/**
+ * Scale-step lookup utilities.
+ * Both functions accept a `baseline` parameter instead of importing
+ * a hardcoded scale config, making them config-driven.
+ */
+
+import type { ScaleBaselineConfig, ScaleBaselineMapping } from '../config/types';
 
 export interface ExpectedScaleStep {
   /** The mapping entry from the baseline config */
@@ -13,14 +17,19 @@ export interface ExpectedScaleStep {
 
 /**
  * Look up what the modular scale expects for a given HTML tag name.
- * Returns null for unmapped elements.
+ * Returns null for unmapped elements or when no baseline is configured.
  *
  * Reads live CSS variable values from the document, so results
  * reflect the current --font-base and ratio settings.
  */
-export function getExpectedScaleStep(tagName: string): ExpectedScaleStep | null {
+export function getExpectedScaleStep(
+  tagName: string,
+  baseline: ScaleBaselineConfig | null,
+): ExpectedScaleStep | null {
+  if (!baseline || !baseline.mapping || baseline.mapping.length === 0) return null;
+
   const tag = tagName.toLowerCase();
-  const mapping = AK12_SCALE_BASELINE.mapping.find((m) => m.selector === tag);
+  const mapping = baseline.mapping.find((m) => m.selector === tag);
   if (!mapping) return null;
 
   const root = document.documentElement;
@@ -49,12 +58,18 @@ export function getExpectedScaleStep(tagName: string): ExpectedScaleStep | null 
 /**
  * Find the nearest scale step to a given pixel value.
  * Useful for unmapped elements to show "nearest scale step" context.
+ * Returns null when no baseline is configured.
  */
-export function findNearestScaleStep(computedPx: number): {
+export function findNearestScaleStep(
+  computedPx: number,
+  baseline: ScaleBaselineConfig | null,
+): {
   mapping: ScaleBaselineMapping;
   expectedPx: number;
   deltaPx: number;
 } | null {
+  if (!baseline || !baseline.mapping || baseline.mapping.length === 0) return null;
+
   const root = document.documentElement;
   const style = getComputedStyle(root);
 
@@ -63,7 +78,7 @@ export function findNearestScaleStep(computedPx: number): {
   // Deduplicate by fontSizeVar (p and h5 both map to body, etc.)
   const seen = new Set<string>();
 
-  for (const mapping of AK12_SCALE_BASELINE.mapping) {
+  for (const mapping of baseline.mapping) {
     if (seen.has(mapping.fontSizeVar)) continue;
     seen.add(mapping.fontSizeVar);
 

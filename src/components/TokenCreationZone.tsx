@@ -2,8 +2,10 @@
 
 import { useCallback, useMemo, useState } from 'react';
 import { Copy, Check } from 'lucide-react';
-// PENDING: This file is refactored in DL-CC03
-import { TOKEN_OVERRIDES, TOKEN_GROUPS } from '../core/token-registry';
+import { TOKEN_GROUPS } from '../config/token-groups';
+import { useDevLensConfig } from '../hooks/use-devlens-config';
+import { autoDetectTokens } from '../core/auto-detect';
+import { buildRegistry } from '../core/token-registry';
 import { generateCCPrompt } from '../core/cc-prompt-generator';
 import { HslColorControl } from './HslColorControl';
 import { LengthControl } from './LengthControl';
@@ -50,13 +52,30 @@ export function TokenCreationZone() {
   const [value, setValue] = useState(DEFAULT_VALUES['hsl-color']);
   const [copied, setCopied] = useState(false);
 
+  const { tokenOverrides, tokenGroups: extraGroups } = useDevLensConfig();
+
+  const registry = useMemo(
+    () => buildRegistry(autoDetectTokens(), tokenOverrides),
+    [tokenOverrides],
+  );
+
+  const allGroups = useMemo(() => {
+    const groups = [...TOKEN_GROUPS] as string[];
+    if (extraGroups) {
+      for (const g of extraGroups) {
+        if (!groups.includes(g)) groups.push(g);
+      }
+    }
+    return groups;
+  }, [extraGroups]);
+
   const kebabName = toKebab(tokenName);
   const currentTypeOption = TYPE_OPTIONS.find((t) => t.value === tokenType)!;
 
   const collision = useMemo(() => {
     if (!kebabName) return false;
-    return `--${kebabName}` in TOKEN_OVERRIDES;
-  }, [kebabName]);
+    return `--${kebabName}` in registry;
+  }, [kebabName, registry]);
 
   const outputPreview = useMemo(() => {
     if (!kebabName || !value) return '';
@@ -185,7 +204,7 @@ export function TokenCreationZone() {
           </div>
           {collision && (
             <div className="te-token-form-error">
-              Token already exists in TOKEN_OVERRIDES
+              Token already exists in the registry
             </div>
           )}
         </div>
@@ -198,7 +217,7 @@ export function TokenCreationZone() {
             value={group}
             onChange={(e) => setGroup(e.target.value)}
           >
-            {TOKEN_GROUPS.map((g) => (
+            {allGroups.map((g) => (
               <option key={g} value={g}>{g}</option>
             ))}
           </select>
